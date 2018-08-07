@@ -22,6 +22,7 @@
 		
 		fx					: 'random',	//'random','simpleFade', 'curtainTopLeft', 'curtainTopRight', 'curtainBottomLeft', 'curtainBottomRight', 'curtainSliceLeft', 'curtainSliceRight', 'blindCurtainTopLeft', 'blindCurtainTopRight', 'blindCurtainBottomLeft', 'blindCurtainBottomRight', 'blindCurtainSliceBottom', 'blindCurtainSliceTop', 'stampede', 'mosaic', 'mosaicReverse', 'mosaicRandom', 'mosaicSpiral', 'mosaicSpiralReverse', 'topLeftBottomRight', 'bottomRightTopLeft', 'bottomLeftTopRight', 'bottomLeftTopRight'
 										//you can also use more than one effect, just separate them with commas: 'simpleFade, scrollRight, scrollBottom'
+		prevFx : "random",
 
 		mobileFx			: '',	//leave empty if you want to display the same effect on mobile devices and on desktop etc.
 
@@ -1073,7 +1074,7 @@
 	
 	/*************************** FUNCTION nextSlide() ***************************/
 	
-	function nextSlide(navSlide){ 
+	function nextSlide(navSlide, prev){ 
 		elem.addClass('camerasliding');
 		
 		videoPresent = false;
@@ -1144,6 +1145,12 @@
 					$('.camera_loader',wrap).css({'visibility':'visible'});
 				});
 			}
+
+			var fx = opts.fx;
+			if(typeof prev !== undefined && prev){
+				fx = opts.prevFx;
+			}
+
 			var rows = opts.rows,
 				cols = opts.cols,
 				couples = 1,
@@ -1169,14 +1176,15 @@
 			var dataFx = $(' > div',elem).eq(slideI).attr('data-fx');
 				
 			if(isMobile()&&opts.mobileFx!=''&&opts.mobileFx!='default'){
-				fx = opts.mobileFx;
+				// fx = opts.mobileFx;
 			} else {
 				if(typeof dataFx !== 'undefined' && dataFx!== false && dataFx!== 'default'){
-					fx = dataFx;
+					//fx = dataFx;
 				} else {
-					fx = opts.fx;
+					//fx = opts.fx;
 				}
 			}
+
 			
 			if(fx=='random') {
 				fx = shuffle(randomFx);
@@ -2097,9 +2105,9 @@
 							$('#'+pieID+', .camera_canvas_wrap',wrap).animate({opacity:0},0);
 							canvasLoader();
 							if(idNum!=0){
-								nextSlide(idNum);
+								nextSlide(idNum, true);
 							} else {
-								nextSlide(amountSlide);
+								nextSlide(amountSlide, true);
 						   }
 						   opts.onStartLoading.call(this);
 						}
